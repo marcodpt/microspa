@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MicroSPA</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <script src="app.js" type="module"></script>
+  </head>
+  <body>
+    <nav>
+      <a href="#/">Home</a>
+      <a href="#/counter">Counter</a>
+      <a href="#/counter/7">Counter 7</a>
+      <a href="#/counter?start=3">Counter 3</a>
+      <a href="#/this/is/404">Not Founded</a>
+    </nav>
+    <main id="app">
+      <h1>MicroSPA</h1>
+      <p>Hello world! From MicroSPA</p>
+      <ms-counter></ms-counter>
+    </main>
+    <template id="view">
+      <h1>Some template defined view</h1>
+    </template>
+    <template id="ms-error">
+      <h1>Error!</h1>
+      <p>Error executing script!</p>
+      <p>Please check browser logs!</p>
+    </template>
+    <template id="ms-loading">
+      <h1>Loading...</h1>
+    </template>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-# ![microspa](favicon.ico) microspa
+# ![](favicon.ico) MicroSPA
 A router for micro-frontends
 
 ## Component(element, params) -> stop?
