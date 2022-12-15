@@ -1,17 +1,9 @@
 const components = {}
 
-const render = (root, e) => {
-  root.innerHTML = ''
-  Array.from((e.tagName.toLowerCase() == 'template' ? e.content : e).children)
-    .forEach(child => {
-      root.appendChild(child)
-    })
-}
-
 const setView = (root, id) => {
   const e = document.getElementById(id)
   if (e) {
-    render(root, e)
+    root.innerHTML = e.innerHTML
   }
 }
 
@@ -53,7 +45,10 @@ const template = (name, element) => {
     }, document.createElement('template'))
 
   components[name] = (root, params) => {
-    render(root, template)
+    root.innerHTML = ''
+    Array.from(template.content.children).forEach(child => {
+      root.appendChild(child)
+    })
 
     const Stop = []
     Object.keys(components).forEach(name => {

@@ -5,7 +5,7 @@ register('counter', (node, {start}) => import("https://unpkg.com/superfine")
     const setState = (state) =>
       patch(
         node,
-        h(node.tagName, {}, [
+        h(node.tagName.toLowerCase(), {}, [
           h("h1", {}, text(state)),
           h("button", { onclick: () => setState(state - 1) }, text("-")),
           h("button", { onclick: () => setState(state + 1) }, text("+")),
@@ -32,7 +32,7 @@ register('todo', (node, {value}) => import("https://unpkg.com/hyperapp")
     app({
       init: { todos: [], value: value || "" },
       view: ({ todos, value }) =>
-        h("main", {}, [
+        h(node.tagName.toLowerCase(), {}, [
           h("h1", {}, text("To do list")),
           h("input", { type: "text", oninput: NewValue, value }),
           h("ul", {},
