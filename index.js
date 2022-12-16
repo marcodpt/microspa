@@ -1,110 +1,107 @@
-const components = {}
+const getParams = (e, params) => {
+  const attrs = Array.from(e.attributes).reduce((attrs, {
+    nodeName,
+    nodeValue
+  }) => {
+    if (nodeName.substr(0, 5) == 'data-') {
+      attrs[nodeName.substr(5)] = params[nodeValue]
+    } else {
+      attrs[nodeName] = nodeValue
+    }
+    return attrs
+  }, {})
 
-const setView = (root, id) => {
-  const e = document.getElementById(id)
-  if (e) {
-    root.innerHTML = e.innerHTML
+  return {
+    ...params,
+    ...attrs
   }
 }
 
-const run = (name, root, params) => Promise.resolve()
+const setView = (root, view, components, params) => {
+  if (view) {
+    while (root.lastChild) {
+      root.removeChild(root.lastChild)
+    }
+    const e = view.tagName.toLowerCase() == 'template' ? view.content : view 
+    Array.from(e.children).forEach(child => {
+      root.appendChild(child.cloneNode(true))
+    })
+
+    if (components) {
+      const Stop = []
+
+      document.querySelectorAll('template[id^=ms-]').forEach(view => {
+        root.querySelectorAll(view.getAttribute('id')).forEach(root => {
+          Stop.push(setView(root, view, components, getParams(root)))
+        })
+      })
+
+      Object.keys(components).forEach(name => {
+        const kebab = 'ms-'+name
+          .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+          .toLowerCase()
+
+        root.querySelectorAll(kebab).forEach(e => {
+          Stop.push(run(components, components[name], e, getParams(e)))
+        })
+      })
+
+      return Promise.allSettled(Stop).then(Stop => () => Stop
+        .map(({value}) => value)
+        .filter(stop => typeof stop == 'function')
+        .forEach(stop => stop())
+      )
+    }
+  }
+  return () => {}
+}
+
+const run = (components, action, root, params) => Promise.resolve()
   .then(() => {
-    setView(root, 'ms-loading')
-    return components[name](root, params)
+    setView(root, document.getElementById('ms-loading'))
+
+    if (typeof action == 'function') {
+      return action(root, params)
+    } else if (typeof action == 'string' && action.substr(0, 3) == 'ms-') {
+      return setView(root, document.getElementById(action), components, params)
+    }
   })
   .catch(err => {
-    setView(root, 'ms-error')
+    setView(root, document.getElementById('ms-error'))
     throw err
   })
 
-const register = (name, component) => {
-  if (!name || typeof name != 'string') {
-    throw `You must provide a name for the component: ${name}`
-  }
-  if (typeof component != 'function') {
-    throw `Component must be a function with signature: (element, params) -> stop`
-  }
+export default (root, {components, routes}) => {
+  components = components || {}
+  routes = routes || {}
 
-  components[name] = component
-} 
-
-const template = (name, element) => {
-  if (element == null) {
-    element = name
-    name = element.getAttribute('id')
-  }
-
-  if (!name) {
-    throw `No id associated to element:\n${element.outerHTML}`
-  }
-
-  const template = element.tagName.toLowerCase() == 'template' ? element : 
-    Array.from(element.children).reduce((template, child) => {
+  if (!document.getElementById('ms-default')) {
+    const tpl = Array.from(root.children).reduce((template, child) => {
       template.content.appendChild(child.cloneNode(true))
       return template
     }, document.createElement('template'))
-
-  components[name] = (root, params) => {
-    root.innerHTML = ''
-    Array.from(template.content.children).forEach(child => {
-      root.appendChild(child)
-    })
-
-    const Stop = []
-    Object.keys(components).forEach(name => {
-      const kebab = 'ms-'+name
-        .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-        .toLowerCase()
-
-      root.querySelectorAll(kebab).forEach(e => {
-        const attrs = Array.from(e.attributes).reduce((attrs, {
-          nodeName,
-          nodeValue
-        }) => {
-          if (nodeName.substr(0, 5) == 'data-') {
-            attrs[nodeName.substr(5)] = params[nodeValue]
-          } else {
-            attrs[nodeName] = nodeValue
-          }
-          return attrs
-        }, {})
-
-        Stop.push(run(name, e, {
-          ...params,
-          ...attrs
-        }))
-      })
-    })
-
-    return Promise.allSettled(Stop).then(Stop => () => Stop
-      .map(({value}) => value)
-      .filter(stop => typeof stop == 'function')
-      .forEach(stop => stop())
-    )
+    tpl.setAttribute('id', 'ms-default')
+    document.body.appendChild(tpl)
   }
-}
 
-const start = (root, routes) => {
-  routes = routes || {}
-  const id = root.getAttribute('id') || null
-  if (id) {
-    template(root)
+  if (!routes['*']) {
+    routes['*'] = 'ms-default'
   }
+
   const state = {
     path: null,
+    signature: null,
     stop: () => {},
     pending: false
   }
   const getUrl = () => window.location.hash.substr(1)
   const router = (test) => {
-    console.log('router')
     if (state.path === false) {
       return
     }
     const url = getUrl()
     const Url = url.split('?')
     const path = Url.shift()
-    console.log('path: '+path)
     if (path === state.path) {
       return
     }
@@ -119,7 +116,6 @@ const start = (root, routes) => {
         ...Q,
         [key]: value
       }), {})
-    console.log('query: '+JSON.stringify(query, undefined, 2))
 
     const Path = path.split('/').map(decodeURIComponent)
     const {route, params} = Object.keys(routes).reduce((match, route) => {
@@ -136,6 +132,7 @@ const start = (root, routes) => {
               weight++
             }
           }
+          return params
         }, {})
         if (params && weight > match.weight) {
           return {
@@ -147,20 +144,19 @@ const start = (root, routes) => {
       }
       return match
     }, {
-      route: id,
+      route: '*',
       params: {},
       weight: 0
     })
-    console.log(components)
-    console.log('id: '+id)
+    const signature = `${route}\n${JSON.stringify(params)}`
 
-    if (route != null && !state.pending) {
+    if (route != null && !state.pending && state.signature !== signature) {
       state.stop()
       state.path = path 
+      state.signature = signature
       state.stop = null
 
-      console.log('route: '+route)
-      run(route, root, {
+      run(components, routes[route], root, {
         ...query,
         ...params
       }).then(stop => {
@@ -180,5 +176,3 @@ const start = (root, routes) => {
     state.path = false
   } 
 }
-
-export {register, template, start}

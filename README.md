@@ -9,7 +9,7 @@ Component is a function defined by this signature, where:
 
 Example: 
 ```js
-const counter = (element, {count, delay}) => {
+const ticker = (element, {count, delay}) => {
   count = count || 0
   const setCount = () => {
     element.innerHTML = `<div>${count}</div>`
@@ -23,10 +23,10 @@ const counter = (element, {count, delay}) => {
 
 This definition should handle the custom element case:
 ```html
-<my-counter count="20" delay="3"></my-counter>
+<ms-ticker count="20" delay="3"></ms-ticker>
 ```
 
 And should also handle the url case:
 ```
-#/counter?count=20&delay=3
+#/ticker?count=20&delay=3
 ```
