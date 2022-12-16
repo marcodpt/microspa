@@ -125,7 +125,7 @@ export default (root, {components, routes}) => {
         const params = Path.reduce((params, value, i) => {
           if (params) {
             if (Route[i].substr(0, 1) == ':') {
-              params[Route[i]] = value
+              params[Route[i].substr(1)] = value
             } else if (Route[i] !== value) {
               params = null
             } else {
