@@ -18,5 +18,30 @@
     <div id="app" style="display:none">
       <h1>Home Page</h1>
     </div>
+    <template id="ms-simple">
+      <h1>Simple</h1>
+    </template>
+    <template id="ms-view">
+      <h1>View</h1>
+      <ms-debug></ms-debug>
+    </template>
+    <template id="ms-force">
+      <h1>Force</h1>
+      <ms-debug x="4" y="3"></ms-debug>
+    </template>
+    <template id="ms-transform">
+      <h1>Transform</h1>
+      <ms-debug data-x="i" data-y="j"></ms-debug>
+    </template>
+    <template id="ms-deep">
+      <h1>Deep</h1>
+      <ms-simple>?</ms-simple>
+      <ms-debug>!</ms-debug>
+    </template>
+    <template id="ms-case">
+      <h1>Case</h1>
+      <ms-camelCase></ms-camelCase>
+      <ms-camel-case></ms-camel-case>
+    </template>
   </body>
 </html>

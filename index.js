@@ -32,7 +32,7 @@ const setView = (root, view, components, params) => {
 
       document.querySelectorAll('template[id^=ms-]').forEach(view => {
         root.querySelectorAll(view.getAttribute('id')).forEach(root => {
-          Stop.push(setView(root, view, components, getParams(root)))
+          Stop.push(setView(root, view, components, getParams(root, params)))
         })
       })
 
@@ -42,7 +42,7 @@ const setView = (root, view, components, params) => {
           .toLowerCase()
 
         root.querySelectorAll(kebab).forEach(e => {
-          Stop.push(run(components, components[name], e, getParams(e)))
+          Stop.push(run(components, components[name], e, getParams(e, params)))
         })
       })
 
@@ -64,6 +64,8 @@ const run = (components, action, root, params) => Promise.resolve()
       return action(root, params)
     } else if (typeof action == 'string' && action.substr(0, 3) == 'ms-') {
       return setView(root, document.getElementById(action), components, params)
+    } else if (typeof action == 'string' && components[action]) {
+      return components[action](root, params)
     }
   })
   .catch(err => {
@@ -105,7 +107,7 @@ export default (root, {components, routes}) => {
     if (path === state.path) {
       return
     }
-    const query = Url.join('=').split('&')
+    const query = Url.join('?').split('&')
       .map(pair => pair.split('='))
       .map(pair => ({
         key: decodeURIComponent(pair.shift()),
