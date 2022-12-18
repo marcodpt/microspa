@@ -98,7 +98,7 @@ export default (root, {components, routes}) => {
   }
   const getUrl = () => window.location.hash.substr(1)
   const router = (test) => {
-    if (state.path === false) {
+    if (state.path === false || state.pending) {
       return
     }
     const url = getUrl()
@@ -152,20 +152,23 @@ export default (root, {components, routes}) => {
     })
     const signature = `${route}\n${JSON.stringify(params)}`
 
-    if (route != null && !state.pending && state.signature !== signature) {
+    if (state.signature !== signature) {
       state.stop()
       state.path = path 
       state.signature = signature
-      state.stop = null
+      state.stop = () => {}
+      state.pending = true
+      const rerun = stop => {
+        state.pending = false
+        state.stop = typeof stop == 'function' ? stop : () => {}
+        router()
+      }
 
       run(components, routes[route], root, {
         ...query,
         ...params
-      }).then(stop => {
-        state.stop = typeof stop == 'function' ? stop : () => {}
-        router()
-      }).catch(err => {
-        state.stop = () => {}
+      }).then(rerun).catch(err => {
+        rerun()
         throw err
       })
     }
