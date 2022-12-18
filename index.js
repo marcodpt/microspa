@@ -70,7 +70,7 @@ const run = (components, action, root, params) => Promise.resolve()
   })
   .catch(err => {
     setView(root, document.getElementById('ms-error'))
-    throw err
+    console.warn(err)
   })
 
 export default (root, {components, routes}) => {
@@ -169,7 +169,7 @@ export default (root, {components, routes}) => {
         ...params
       }).then(rerun).catch(err => {
         rerun()
-        throw err
+        console.warn(err)
       })
     }
   }
