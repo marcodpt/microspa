@@ -38,7 +38,12 @@ const seq = V => V.reduce(
 const T = []
 const test = Tests => assert => {
   const done = assert.async()
-  seq(Tests.map(({url, time, res, run, tick}) => wait(() => {
+  seq(Tests.map(({url, time, res, run, tick, blank}) => wait(() => {
+    if (blank) {
+      while(T.length) {
+        T.pop()
+      }
+    }
     if (typeof run == 'function') {
       run()
     }
@@ -49,13 +54,13 @@ const test = Tests => assert => {
     assert.equal(
       text(app.innerHTML),
       text(typeof res != 'string' ? toStr(res) : res),
-      url || `wait${time}`
+      url || `wait: ${time}`
     )
     if (tick != null) {
       assert.equal(
         toStr(T),
         toStr(tick),
-        `ticks: ${url}`
+        `ticks: ${url || time}`
       )
     }
   }, time || step))).then(done)
@@ -81,10 +86,10 @@ const err = (root, params) => {
 }
 
 const ticker = (root, {start}) => {
-  start = isNaN(start) ? 0 : start
+  start = (isNaN(start) ? 0 : parseInt(start)) - 1
   const i = T.length
   T.push(start)
-  const update = () => root.innerHTML = `<h1>Tick: ${T[i]}</h1>`
+  const update = () => root.innerHTML = `<h1>Tick: ${++T[i]}</h1>`
   update()
   const interval = setInterval(update, tick)
   return () => clearInterval(interval)
@@ -108,8 +113,10 @@ routes['/rejected'] = 'rejected'
 routes['/err'] = 'err'
 routes['/error'] = 'ms-error'
 routes['/404'] = 'ms-default'
-routes['/tick/:start'] = ticker
-routes['/tick'] = 'ticker'
+routes['/ticker/:start'] = ticker
+routes['/ticker'] = 'ticker'
+routes['/many'] = 'ms-many'
+routes['/too/many'] = 'ms-too-many'
 microspa(app, {
   routes,
   components: {
@@ -662,14 +669,14 @@ QUnit.module('promises', () => {
 
 QUnit.module('stop', () => {
   QUnit.test('route', test([
-    {url: '#', res: '<h1>Home Page</h1>'},
+    {url: '#', res: '<h1>Home Page</h1>', blank: true},
     {
       url: '#/ticker/5',
       res: `<h1>Tick: 5</h1>`,
       tick: [5]
     },
     {
-      wait: 2*tick + step,
+      time: 2*tick + 10,
       res: `<h1>Tick: 7</h1>`,
       tick: [7]
     },
@@ -679,11 +686,123 @@ QUnit.module('stop', () => {
       tick: [7]
     },
     {
-      wait: long,
+      time: long,
       res: '<h1>Home Page</h1>',
       tick: [7]
-    }
+    },
+    {url: '#/simple', res: '<h1>Simple</h1>'},
+    {url: '#/lazy', res: '<h1>Simple</h1>'},
+    {url: '#/ticker/2', res: `<h1>Simple</h1>`, tick: [7]},
+    {url: '#', res: '<h1>Simple</h1>'},
+    {time: long, res: '<h1>Home Page</h1>', tick: [7]},
+    {url: '#/lazy', res: '<h1>Home Page</h1>'},
+    {url: '#/ticker/11', res: `<h1>Home Page</h1>`, tick: [7]},
+    {
+      time: long - step,
+      res: `<h1>Tick: 11</h1>`,
+      tick: [7, 11]
+    },
+    {
+      time: 2*tick + 10,
+      res: `<h1>Tick: 13</h1>`,
+      tick: [7, 13]
+    },
+    {url: '#', res: '<h1>Home Page</h1>', tick: [7, 13]},
+    {time: long, res: '<h1>Home Page</h1>', tick: [7, 13]}
   ]))
-  //QUnit.test('component')
-  //QUnit.test('view')
+  QUnit.test('component', test([
+    {url: '#', res: '<h1>Home Page</h1>', blank: true},
+    {
+      url: '#/ticker',
+      res: `<h1>Tick: 0</h1>`,
+      tick: [0]
+    },
+    {
+      time: 2*tick + 10,
+      res: `<h1>Tick: 2</h1>`,
+      tick: [2]
+    },
+    {
+      url: '#',
+      res: '<h1>Home Page</h1>',
+      tick: [2]
+    },
+    {
+      time: long,
+      res: '<h1>Home Page</h1>',
+      tick: [2]
+    },
+    {url: '#/simple', res: '<h1>Simple</h1>'},
+    {url: '#/lazy', res: '<h1>Simple</h1>'},
+    {url: '#/ticker', res: `<h1>Simple</h1>`, tick: [2]},
+    {url: '#', res: '<h1>Simple</h1>'},
+    {time: long, res: '<h1>Home Page</h1>', tick: [2]},
+    {url: '#/lazy', res: '<h1>Home Page</h1>'},
+    {url: '#/ticker', res: `<h1>Home Page</h1>`, tick: [2]},
+    {
+      time: long - step,
+      res: `<h1>Tick: 0</h1>`,
+      tick: [2, 0]
+    },
+    {
+      time: 2*tick + 10,
+      res: `<h1>Tick: 2</h1>`,
+      tick: [2, 2]
+    },
+    {url: '#', res: '<h1>Home Page</h1>', tick: [2, 2]},
+    {time: long, res: '<h1>Home Page</h1>', tick: [2, 2]}
+  ]))
+  QUnit.test('view', test([
+    {url: '#', res: '<h1>Home Page</h1>', blank: true},
+    {
+      tick: [1, 7],
+      url: '#/many?start=1',
+      res: `
+        <h1>Many</h1>
+        <ms-ticker><h1>Tick: 1</h1></ms-ticker>
+        <ms-ticker start="7"><h1>Tick: 7</h1></ms-ticker>
+      `,
+    },
+    {
+      time: 2*tick + 10,
+      tick: [3, 9],
+      res: `
+        <h1>Many</h1>
+        <ms-ticker><h1>Tick: 3</h1></ms-ticker>
+        <ms-ticker start="7"><h1>Tick: 9</h1></ms-ticker>
+      `
+    },
+    {url: '#', res: '<h1>Home Page</h1>', tick: [3, 9]},
+    {time: long, res: '<h1>Home Page</h1>', tick: [3, 9]},
+    {
+      tick: [3, 9, 13, 5, 13, 7],
+      url: '#/too/many?start=13',
+      res: `
+        <h1>Too many</h1>
+        <ms-ticker><h1>Tick: 13</h1></ms-ticker>
+        <ms-ticker start="5"><h1>Tick: 5</h1></ms-ticker>
+        <ms-many>
+          <h1>Many</h1>
+          <ms-ticker><h1>Tick: 13</h1></ms-ticker>
+          <ms-ticker start="7"><h1>Tick: 7</h1></ms-ticker>
+        </ms-many>
+      `,
+    },
+    {
+      time: 2*tick + 10,
+      tick: [3, 9, 15, 7, 15, 9],
+      res: `
+        <h1>Too many</h1>
+        <ms-ticker><h1>Tick: 15</h1></ms-ticker>
+        <ms-ticker start="5"><h1>Tick: 7</h1></ms-ticker>
+        <ms-many>
+          <h1>Many</h1>
+          <ms-ticker><h1>Tick: 15</h1></ms-ticker>
+          <ms-ticker start="7"><h1>Tick: 9</h1></ms-ticker>
+        </ms-many>
+      `
+    },
+    {url: '#', res: '<h1>Home Page</h1>', tick: [3, 9, 15, 7, 15, 9]},
+    {time: long, res: '<h1>Home Page</h1>', tick: [3, 9, 15, 7, 15, 9]},
+  ]))
 })

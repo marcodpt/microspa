@@ -30,12 +30,6 @@ const setView = (root, view, components, params) => {
     if (components) {
       const Stop = []
 
-      document.querySelectorAll('template[id^=ms-]').forEach(view => {
-        root.querySelectorAll(view.getAttribute('id')).forEach(root => {
-          Stop.push(setView(root, view, components, getParams(root, params)))
-        })
-      })
-
       Object.keys(components).forEach(name => {
         const kebab = 'ms-'+name
           .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
@@ -43,6 +37,12 @@ const setView = (root, view, components, params) => {
 
         root.querySelectorAll(kebab).forEach(e => {
           Stop.push(run(components, components[name], e, getParams(e, params)))
+        })
+      })
+
+      document.querySelectorAll('template[id^=ms-]').forEach(view => {
+        root.querySelectorAll(view.getAttribute('id')).forEach(root => {
+          Stop.push(setView(root, view, components, getParams(root, params)))
         })
       })
 
