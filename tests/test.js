@@ -48,7 +48,7 @@ const test = Tests => assert => {
       run()
     }
     if (typeof url == 'string' && url.substr(0, 1) == '#') {
-      window.location.hash = url
+      location.replace(url)
     }
   }, () => {
     assert.equal(

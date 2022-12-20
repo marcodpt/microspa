@@ -1,22 +1,261 @@
 # ![](favicon.ico) MicroSPA
-A router for micro-frontends
+A router for [micro-frontends](https://micro-frontends.org/)
 
-## Component(element, params) -> stop?
-Component is a function defined by this signature, where:
-- element: is a DOM element where it should be mounted.
-- params: is an object with the params passed to component.
-- stop: is an optional function that stop the component when it is called.
+## Usage
+[Live Demo](https://marcodpt.github.io/microspa/)
+
+```html
+<html>
+  <head>
+    <script type="module">
+      import microspa from "https://cdn.jsdelivr.net/gh/marcodpt/microspa/index.js"
+
+      const ticker = (root, {start, delay}) => {
+        start = (isNaN(start) ? 0 : parseInt(start)) - 1
+        const update = () => {
+          root.innerHTML = `<h1>Tick: ${++start}</h1>`
+          console.log('tick: '+start)
+        }
+        update()
+        const interval = setInterval(update, (delay || 1) * 1000)
+        return () => {clearInterval(interval)}
+      }
+
+      const counter = (node, {start}) => import("https://unpkg.com/superfine")
+        .then(({h, text, patch}) => {
+          var stop = false
+          const setState = (state) => stop ? null :
+            patch(
+              node,
+              h(node.tagName.toLowerCase(), {}, [
+                h("h1", {}, text(state)),
+                h("button", { onclick: () => setState(state - 1) }, text("-")),
+                h("button", { onclick: () => setState(state + 1) }, text("+")),
+              ])
+            )
+
+          setState(isNaN(start) ? 0 : parseInt(start))
+
+          return () => {stop = true}
+        })
+
+      const todo = (node, {value}) => import("https://unpkg.com/hyperapp")
+        .then(({h, text, app}) => {
+          var stop = false
+          const AddTodo = (state) => stop ? state : ({
+            ...state,
+            value: "",
+            todos: state.todos.concat(state.value),
+          })
+
+          const NewValue = (state, event) => stop ? state : ({
+            ...state,
+            value: event.target.value,
+          })
+
+          app({
+            init: { todos: [], value: value || "" },
+            view: ({ todos, value }) =>
+              h(node.tagName.toLowerCase(), {}, [
+                h("h1", {}, text("To do list")),
+                h("input", { type: "text", oninput: NewValue, value }),
+                h("ul", {},
+                  todos.map((todo) => h("li", {}, text(todo)))
+                ),
+                h("button", { onclick: AddTodo }, text("New!")),
+              ]),
+            node: node
+          })
+
+          return () => {stop = true}
+        })
+
+      window.stop = microspa(document.getElementById('app'), {
+        components: {
+          ticker,
+          counter,
+          todo
+        },
+        routes: {
+          '/counter/:start': counter,
+          '/todo': todo,
+          '/ticker': ticker,
+          '/view': 'ms-view'
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <nav>
+      <a href="#/">Home</a>
+      <a href="#/todo">Todo</a>
+      <a href="#/ticker">Ticker</a>
+      <a href="#/view">View with 2 tickers</a>
+      <a href="#/counter/7">Counter 7</a>
+      <a href="#/this/is/404">Not Founded</a>
+      <a href="javascript:;" onclick="stop()">Stop Router</a>
+      <a href="tests">Test page</a>
+    </nav>
+    <main id="app">
+      <h1>MicroSPA</h1>
+      <p>Hello world! From MicroSPA</p>
+      <ms-counter start=15></ms-counter>
+      <ms-todo value=read></ms-todo>
+    </main>
+    <template id="ms-view">
+      <h1>Some template defined view with 2 tickers</h1>
+      <ms-ticker></ms-ticker>
+      <ms-ticker start="10"></ms-ticker>
+    </template>
+    <template id="ms-error">
+      <h1>Error!</h1>
+      <p>Error executing script!</p>
+      <p>Please check browser logs!</p>
+    </template>
+    <template id="ms-loading">
+      <h1>Loading...</h1>
+    </template>
+  </body>
+</html>
+```
+ - `ticker`: a [component](#Component) made with vanilla js. 
+ - `counter`: a [component](#Component) made with
+[superfine](https://github.com/jorgebucaran/superfine).
+ - `todo`: a [component](#Component) made with
+[hyperapp](https://github.com/jorgebucaran/hyperapp).
+ - all [components](#Component) are lazy loaded, as you navigate to the routes.
+This is a key concept for very fast page load.
+(ex.: [qwik](https://github.com/BuilderIO/qwik)).
+ - `<main id="app">`: The default route, rendered on the server side.
+ - `<template id="ms-view">`: A view defined by `html`.
+ - `<template id="ms-error">`: An optional view, which is rendered every time the
+[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+associated with the route is `rejected`. 
+ - `<template id="ms-loading">`: An optional view, which is rendered every time the
+[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+associated with the route is `pending`.
+ - `<ms-ticker>`: calls the associated [component](#Component).
+ - `<ms-counter>`: calls the associated [component](#Component).
+ - `<ms-todo>`: calls the associated [component](#Component).
+
+## microspa(root, {routes, components}) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
+
+### DOM element `root`
+The DOM element where the router should be mounted.
+
+### Object `components`
+An object where the keys are the [component](#Component) names and the 
+values are [component](#Component) functions.
+
+The name of the [components](#Component) must be written in
+[camel case](https://en.wikipedia.org/wiki/Camel_case),
+and you can use the name of the routes object that way.
+But if you use it in an `html` view, it will convert tox
+[kebab case](https://en.wikipedia.org/wiki/Naming_convention_(programming))
+starting with `ms-`.
+
+Ex: someComp -> ms-some-comp
+
+### Object `routes`
+An object where the keys are the paths of the routes and the values can be:
+ - [component](#Component) functions
+ - a string with an id of an `html` view (must start with `ms-`)
+ - a string that is a key in the `components` object
+
+Paths can define params with `:param`.
+
+Ex: /counter/:start
+This will match:
+ - /counter/7
+```js
+{
+  start: "7"
+}
+```
+
+ - The route with the fewest params will have the highest priority.
+ - If no route matches, the `*` route will be called, if defined,
+or the `html` view `<template id="ms-default">` if present in the DOM,
+or the original content of the `root` element will be displayed.
+ - Query params will be merged with path params (highest priority) to be sent
+as the [component](#Component) `params`.
+
+With the routes:
+ - /counter/:start
+ - /:key/:value
+ - /counter/0
+
+The route `/counter/5` will match:
+ - /counter/:start
+```js
+{
+  start: "5"
+}
+```
+
+The route `/counter/5?start=7&delay=3` will match:
+ - /counter/:start
+```js
+{
+  start: "5",
+  delay: "3"
+}
+```
+
+The route `/counter/0` will match:
+ - /counter/0
+```js
+{}
+```
+
+The route `/other/0` will match:
+ - /:key/:value
+```js
+{
+  key: "other",
+  value: "0"
+}
+```
+
+Whenever `MicroSPA` matches a route, it will:
+ - Calls the `stop` function of each [component](#Component) in the previous route.
+ - Renders the `<template id="ms-loading">` view on the `root` element if it
+exists in the DOM.
+ - Calls the [component](#Component) with the `root` element and path/query `params`.
+ - Resolves all custom elements starting with `ms-` that are defined in the `components` object.
+ - If some error occurs and the view `<template id="ms-error">` exists in DOM,
+it will be rendered in the `root` element.
+
+Some remarks:
+ - only path changes will trigger [components](#Component) rerender.
+ - query params changes will be ignored, you must use then to store the current
+state in url for link sharing eg. 
+ - this is a hash router designed to use `html` files as single page apps
+without ANY building steps.
+
+### Fn `stop`
+A function that stops the router. It will call the `stop` function of all
+[components](#Component) on the screen, and then the router will stop. 
+
+#Component
+Note that `microspa` is also a [component](#Component).
+Definition:
+
+## Component(element, params) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
+- `element`: The DOM element where it should be mounted.
+- `params`: An object with the params passed to the component.
+- `stop`: An optional function that stops the component when it is called.
 
 Example: 
 ```js
-const ticker = (element, {count, delay}) => {
-  count = count || 0
-  const setCount = () => {
-    element.innerHTML = `<div>${count}</div>`
-    count = count + 1
+const ticker = (root, {start, delay}) => {
+  start = (isNaN(start) ? 0 : parseInt(start)) - 1
+  const update = () => {
+    root.innerHTML = `<h1>Tick: ${++start}</h1>`
+    console.log('tick: '+start)
   }
-  setCount()
-  const interval = setInterval(setCount, (delay || 1) * 1000)
+  update()
+  const interval = setInterval(update, (delay || 1) * 1000)
   return () => {clearInterval(interval)}
 }
 ```
@@ -26,7 +265,7 @@ This definition should handle the custom element case:
 <ms-ticker count="20" delay="3"></ms-ticker>
 ```
 
-And should also handle the url case:
+And it should also handle the case of the url:
 ```
 #/ticker?count=20&delay=3
 ```
