@@ -61,15 +61,15 @@ A router for [micro-frontends](https://micro-frontends.org/)
   </body>
 </html>
 ```
- - `ticker`: a [component](#-Component) made with vanilla js.
+ - `ticker`: a [component](#Component) made with vanilla js.
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/ticker.js) 
- - `counter`: a [component](#-Component) made with
+ - `counter`: a [component](#Component) made with
 [superfine](https://github.com/jorgebucaran/superfine).
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/counter.js) 
- - `todo`: a [component](#-Component) made with
+ - `todo`: a [component](#Component) made with
 [hyperapp](https://github.com/jorgebucaran/hyperapp).
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/todo.js) 
- - all [components](#-Component) are lazy loaded, as you navigate to the routes.
+ - all [components](#Component) are lazy loaded, as you navigate to the routes.
 This is a key concept for very fast page load.
 (ex.: [qwik](https://github.com/BuilderIO/qwik)).
  - `<main id="app">`: The default route, rendered on the server side.
@@ -80,9 +80,9 @@ associated with the route is `rejected`.
  - `<template id="ms-loading">`: An optional view, which is rendered every time the
 [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 associated with the route is `pending`.
- - `<ms-ticker>`: calls the associated [component](#-Component).
- - `<ms-counter>`: calls the associated [component](#-Component).
- - `<ms-todo>`: calls the associated [component](#-Component).
+ - `<ms-ticker>`: calls the associated [component](#Component).
+ - `<ms-counter>`: calls the associated [component](#Component).
+ - `<ms-todo>`: calls the associated [component](#Component).
 
 ## microspa(root, {routes, components}) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
 
@@ -90,10 +90,10 @@ associated with the route is `pending`.
 The DOM element where the router should be mounted.
 
 ### Object `components`
-An object where the keys are the [component](#-Component) names and the 
-values are [component](#-Component) functions.
+An object where the keys are the [component](#Component) names and the 
+values are [component](#Component) functions.
 
-The name of the [components](#-Component) must be written in
+The name of the [components](#Component) must be written in
 [camel case](https://en.wikipedia.org/wiki/Camel_case),
 and you can use the name of the routes object that way.
 But if you use it in an `html` view, it will convert tox
@@ -104,7 +104,7 @@ Ex: someComp -> ms-some-comp
 
 ### Object `routes`
 An object where the keys are the paths of the routes and the values can be:
- - [component](#-Component) functions
+ - [component](#Component) functions
  - a string with an id of an `html` view (must start with `ms-`)
  - a string that is a key in the `components` object
 
@@ -124,7 +124,7 @@ This will match:
 or the `html` view `<template id="ms-default">` if present in the DOM,
 or the original content of the `root` element will be displayed.
  - Query params will be merged with path params (highest priority) to be sent
-as the [component](#-Component) `params`.
+as the [component](#Component) `params`.
 
 With the routes:
  - /counter/:start
@@ -164,16 +164,16 @@ The route `/other/0` will match:
 ```
 
 Whenever `MicroSPA` matches a route, it will:
- - Calls the `stop` function of each [component](#-Component) in the previous route.
+ - Calls the `stop` function of each [component](#Component) in the previous route.
  - Renders the `<template id="ms-loading">` view on the `root` element if it
 exists in the DOM.
- - Calls the [component](#-Component) with the `root` element and path/query `params`.
+ - Calls the [component](#Component) with the `root` element and path/query `params`.
  - Resolves all custom elements starting with `ms-` that are defined in the `components` object.
  - If some error occurs and the view `<template id="ms-error">` exists in DOM,
 it will be rendered in the `root` element.
 
 Some remarks:
- - only path changes will trigger [components](#-Component) rerender.
+ - only path changes will trigger [components](#Component) rerender.
  - query params changes will be ignored, you must use then to store the current
 state in url for link sharing eg. 
  - this is a hash router designed to use `html` files as single page apps
@@ -181,10 +181,10 @@ without ANY building steps.
 
 ### Fn `stop`
 A function that stops the router. It will call the `stop` function of all
-[components](#-Component) on the screen, and then the router will stop. 
+[components](#Component) on the screen, and then the router will stop. 
 
 # Component
-Note that `microspa` is also a component.
+Note that `microspa` is also a [component](#Component).
 Definition:
 
 ## Component(element, params) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
