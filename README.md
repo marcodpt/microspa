@@ -85,6 +85,7 @@ associated with the route is `pending`.
  - `<ms-todo>`: calls the associated [component](#Component).
 
 ## microspa(root, {routes, components}) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
+Note that `microspa` is also a [component](#Component).
 
 ### DOM element `root`
 The DOM element where the router should be mounted.
@@ -184,7 +185,6 @@ A function that stops the router. It will call the `stop` function of all
 [components](#Component) on the screen, and then the router will stop. 
 
 # Component
-Note that `microspa` is also a [component](#Component).
 Definition:
 
 ## Component(element, params) -> [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) stop?
