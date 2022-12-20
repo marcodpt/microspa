@@ -9,66 +9,9 @@ A router for [micro-frontends](https://micro-frontends.org/)
   <head>
     <script type="module">
       import microspa from "https://cdn.jsdelivr.net/gh/marcodpt/microspa/index.js"
-
-      const ticker = (root, {start, delay}) => {
-        start = (isNaN(start) ? 0 : parseInt(start)) - 1
-        const update = () => {
-          root.innerHTML = `<h1>Tick: ${++start}</h1>`
-          console.log('tick: '+start)
-        }
-        update()
-        const interval = setInterval(update, (delay || 1) * 1000)
-        return () => {clearInterval(interval)}
-      }
-
-      const counter = (node, {start}) => import("https://unpkg.com/superfine")
-        .then(({h, text, patch}) => {
-          var stop = false
-          const setState = (state) => stop ? null :
-            patch(
-              node,
-              h(node.tagName.toLowerCase(), {}, [
-                h("h1", {}, text(state)),
-                h("button", { onclick: () => setState(state - 1) }, text("-")),
-                h("button", { onclick: () => setState(state + 1) }, text("+")),
-              ])
-            )
-
-          setState(isNaN(start) ? 0 : parseInt(start))
-
-          return () => {stop = true}
-        })
-
-      const todo = (node, {value}) => import("https://unpkg.com/hyperapp")
-        .then(({h, text, app}) => {
-          var stop = false
-          const AddTodo = (state) => stop ? state : ({
-            ...state,
-            value: "",
-            todos: state.todos.concat(state.value),
-          })
-
-          const NewValue = (state, event) => stop ? state : ({
-            ...state,
-            value: event.target.value,
-          })
-
-          app({
-            init: { todos: [], value: value || "" },
-            view: ({ todos, value }) =>
-              h(node.tagName.toLowerCase(), {}, [
-                h("h1", {}, text("To do list")),
-                h("input", { type: "text", oninput: NewValue, value }),
-                h("ul", {},
-                  todos.map((todo) => h("li", {}, text(todo)))
-                ),
-                h("button", { onclick: AddTodo }, text("New!")),
-              ]),
-            node: node
-          })
-
-          return () => {stop = true}
-        })
+      import ticker from './components/ticker.js'
+      import counter from './components/counter.js'
+      import todo from './components/todo.js'
 
       window.stop = microspa(document.getElementById('app'), {
         components: {
@@ -118,11 +61,14 @@ A router for [micro-frontends](https://micro-frontends.org/)
   </body>
 </html>
 ```
- - `ticker`: a [component](#Component) made with vanilla js. 
+ - `ticker`: a [component](#Component) made with vanilla js.
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/ticker.js) 
  - `counter`: a [component](#Component) made with
 [superfine](https://github.com/jorgebucaran/superfine).
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/counter.js) 
  - `todo`: a [component](#Component) made with
 [hyperapp](https://github.com/jorgebucaran/hyperapp).
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/todo.js) 
  - all [components](#Component) are lazy loaded, as you navigate to the routes.
 This is a key concept for very fast page load.
 (ex.: [qwik](https://github.com/BuilderIO/qwik)).
@@ -269,3 +215,14 @@ And it should also handle the case of the url:
 ```
 #/ticker?count=20&delay=3
 ```
+
+## Contributing
+Everything within this documentation is tested 
+[here](https://marcodpt.github.io/microspa/tests/).
+And it will always like this. Any changes to the documentation,
+any contributions MUST be present in the tests.
+
+If the tests do not pass in your browser, if you find any bugs, please raise
+an issue.
+
+It's a very simple project. Any contribution is greatly appreciated.
