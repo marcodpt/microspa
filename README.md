@@ -1,8 +1,24 @@
 # ![](favicon.ico) MicroSPA
 A router for [micro-frontends](https://micro-frontends.org/)
+ - All components (and dependencies) are lazy-loaded.
+ - Home can be server side rendered.
+ - Use `template` tag to define the routes.
+ - Use [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) to access components inside routes.
+ - `loading`, `error`, `default` (404 not found) templates are available.  
 
 ## Usage
 [Live Demo](https://marcodpt.github.io/microspa/)
+
+ - `ticker`: a [component](#Component) made with vanilla js.
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/ticker.js) 
+ - `counter`: a [component](#Component) made with
+[superfine](https://github.com/jorgebucaran/superfine).
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/counter.js) 
+ - `todo`: a [component](#Component) made with
+[hyperapp](https://github.com/jorgebucaran/hyperapp).
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/todo.js) 
+ - `error`: a [component](#Component) made with vanilla js that
+throws an error or reject a promise after some delay.
 
 ```html
 <html>
@@ -160,18 +176,19 @@ But if you use it in an `html` view, it will convert tox
 [kebab case](https://en.wikipedia.org/wiki/Letter_case#Kebab_case)
 starting with `ms-`.
 
-Ex: someComp -> ms-some-comp
+```
+someComp -> ms-some-comp
+```
+### Fn `stop`
+A function that stops the router. It will call the `stop` function of all
+[components](#Component) on the screen, and then the router will stop. 
 
-Some remarks:
+### Remarks:
  - only path changes will trigger [components](#Component) rerender.
  - query params changes will be ignored, you must use then to store the current
 state in url for link sharing eg. 
  - this is a hash router designed to use `html` files as single page apps
 without ANY building steps.
-
-### Fn `stop`
-A function that stops the router. It will call the `stop` function of all
-[components](#Component) on the screen, and then the router will stop. 
 
 # Component
 Definition:
