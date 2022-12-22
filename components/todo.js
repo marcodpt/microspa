@@ -1,13 +1,12 @@
 export default (node, {value}) => import("https://unpkg.com/hyperapp")
   .then(({h, text, app}) => {
-    var stop = false
-    const AddTodo = (state) => stop ? state : ({
+    const AddTodo = (state) => ({
       ...state,
       value: "",
       todos: state.todos.concat(state.value),
     })
 
-    const NewValue = (state, event) => stop ? state : ({
+    const NewValue = (state, event) => ({
       ...state,
       value: event.target.value,
     })
@@ -25,6 +24,4 @@ export default (node, {value}) => import("https://unpkg.com/hyperapp")
         ]),
       node: node
     })
-
-    return () => {stop = true}
   })
