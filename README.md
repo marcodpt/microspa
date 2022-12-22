@@ -225,7 +225,7 @@ And it should also handle the case of the url:
 ```
 
 Another example:
-```html
+```js
 export default (node, {start}) => import("https://unpkg.com/superfine")
   .then(({h, text, patch}) => {
     const setState = state => patch(
