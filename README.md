@@ -19,6 +19,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/todo.js) 
  - `error`: a [component](#Component) made with vanilla js that
 throws an error or reject a promise after some delay.
+[Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/error.js) 
 
 ```html
 <html>
@@ -138,9 +139,8 @@ throws an error or reject a promise after some delay.
     </template>
 
     <!--
-      This template will be displayed inside a custom element,
-      if it reject the promise or throw an error
-      and has no data-error attribute
+      This template will be displayed inside a component every time it
+      rejects the promise or throws an error and has no `error` attribute.
     -->
     <template data-error>
       <h1>Error!</h1>
@@ -149,8 +149,8 @@ throws an error or reject a promise after some delay.
     </template>
 
     <!--
-      This template will be displayed inside a custom element,
-      if it is loading and it has no innerHTML.
+      This template will be displayed inside a component every time
+      it is loading and has no innerHTML.
     -->
     <template data-loading>
       <h1>Loading...</h1>
