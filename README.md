@@ -15,8 +15,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
       import error from './components/error.js'
 
       /*
-        Here we are defining the root of the router:
-        <main id="app">
+        Here we are defining the root of the router: <main id="app">
         And we set 4 custom elements: 
         <ms-ticker>: vanilla JS,
         <ms-counter>: Superfine,
@@ -36,10 +35,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
       <!--This navigate to <main id="app">-->
       <a href="#/">Home</a>
 
-      <!--
-        This navigate to <template data-path="#/todo">
-        The default input value will be: plant a tree
-      -->
+      <!-- This navigate to <template data-path="#/todo">. The value will be: plant a tree-->
       <a href="#/todo?value=plant%20a%20tree">Todo</a>
 
       <!--This navigate to <template data-path="#/tickers"> -->
@@ -62,9 +58,8 @@ A router for [micro-frontends](https://micro-frontends.org/)
     </nav>
 
     <!--
-      This is the root of the router:
-      the path by default is #/ but you can add a data-path attibute
-      the `todo` input will start with: read a book
+      This is the root of the router, by default #/ but you can add a data-path attibute.
+      The `ms-todo` will start with: read a book
     -->
     <main id="app">
       <h1>MicroSPA</h1>
@@ -72,10 +67,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
       <ms-todo value="read a book"></ms-todo>
     </main>
 
-    <!--
-      This is a single component route
-      If you pass a query param `value` will be the default value of `todo`
-    -->
+    <!-- This is a single component route -->
     <template data-path="#/todo">
       <ms-todo></ms-todo>
     </template>
@@ -91,66 +83,39 @@ A router for [micro-frontends](https://micro-frontends.org/)
     </template>
 
 
-    <!--
-      The nav link: Counter params showcase
-      will set the hash to: #/counter/7?start=9&x=11
-    -->
+    <!-- The nav link will set the hash to: #/counter/7?start=9&x=11-->
     <template data-path="#/counter/:start">
-      <!--
-        This element will start counter with 7,
-        because path params has higher priority than query params.
-      -->
+      <!-- starts with 7, path has higher priority than query.-->
       <ms-counter></ms-counter>
 
-      <!--
-        This element will start counter with 1,
-        because attributes has the highest priority.
-      -->
+      <!-- starts with 1, attributes has the highest priority.-->
       <ms-counter start="1"></ms-counter>
 
-      <!--
-        This element will start counter with 11,
-        because data-start="x" set the `start` to query param `x`.
-      -->
+      <!-- start with 11, data-start="x" sets the `start` to `x`.-->
       <ms-counter data-start="x"></ms-counter>
     </template>
 
 
     <template data-path="#/error">
-      <!--
-        This element will display <h1>Custom loading...</h1> for 2 seconds.
-        And then reject the promise with <template data-error> content
-      -->
+      <!-- Display <h1>Custom loading...</h1> for 2s, then reject with <template data-error>-->
       <ms-error message="first error" delay="2">
         <h1>Custom loading...</h1>
       </ms-error>
 
-      <!--
-        This element will display <template data-loading> content for 1 second.
-        And then reject the promise with <template data-error> content
-      -->
+      <!-- Display <template data-loading> for 1s, then reject with <template data-error>-->
       <ms-error message="second error" delay="1"></ms-error>
 
-      <!--
-        This element will display <template data-error> content,
-        because it imediatelly throws an error
-      -->
+      <!-- Throws an error and display <template data-error> -->
       <ms-error message="third error"></ms-error>
 
-      <!--
-        This element will display <h1>Custom error</h1> content,
-        because it imediatelly throws an error
-      -->
+      <!-- Throws an error and display <h1>Custom error</h1> -->
       <ms-error
         message="fourth error"
         error="<h1>Custom error</h1>"
       ></ms-error>
     </template>
 
-    <!--
-      This route will be displayed every time
-      the router does not match any route
-    -->
+    <!-- This route will be displayed every time the router does not match any route -->
     <template data-default>
       <h1>Not Found!</h1>
       <p>Sorry, page not found. <a href="#/">Go home</a></p>
