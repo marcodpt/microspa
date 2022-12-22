@@ -71,9 +71,6 @@ throws an error or rejects a promise after some delay.
 
       <!--This completely stops the router -->
       <a href="javascript:;" onclick="stop()">Stop Router</a>
-
-      <!--This goes to the test page -->
-      <a href="tests">Test page</a>
     </nav>
 
     <!--
@@ -247,12 +244,5 @@ For example, you can see some similarity in this paradigm in
 [qwik](https://github.com/BuilderIO/qwik)
 
 ## Contributing
-Everything within this documentation is tested 
-[here](https://marcodpt.github.io/microspa/tests/).
-And it will always like this. Any changes to the documentation,
-any contributions MUST be present in the tests.
-
-If the tests do not pass in your browser, if you find any bugs, please raise
-an issue.
-
-It's a very simple project. Any contribution is greatly appreciated.
+It's a very simple project.
+Any contribution, any feedback is greatly appreciated.

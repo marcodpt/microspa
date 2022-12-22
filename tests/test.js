@@ -14,12 +14,6 @@ const debug = (root, params) => {
   root.innerHTML = toStr(params)
 }
 const routes = {}
-const setDebug = route => {
-  routes[route] = (root, params) => debug(root, {
-    route,
-    ...params
-  })
-}
 
 const app = document.getElementById('app')
 
@@ -95,38 +89,17 @@ const ticker = (root, {start}) => {
   return () => clearInterval(interval)
 }
 
-setDebug('/:a')
-setDebug('/:a/:b')
-setDebug('/')
-setDebug('/home')
-routes['/view'] = 'ms-view'
-routes['/simple'] = 'ms-simple'
-routes['/force'] = 'ms-force'
-routes['/transform'] = 'ms-transform'
-routes['/deep'] = 'ms-deep'
 routes['/debug'] = 'ms-debug'
-routes['/comp'] = 'debug'
-routes['/case'] = 'ms-case'
-routes['/lazy'] = 'lazy'
 routes['/loading'] = 'ms-loading'
-routes['/rejected'] = 'rejected'
-routes['/err'] = 'err'
 routes['/error'] = 'ms-error'
 routes['/404'] = 'ms-default'
-routes['/ticker/:start'] = ticker
-routes['/ticker'] = 'ticker'
-routes['/many'] = 'ms-many'
-routes['/too/many'] = 'ms-too-many'
 microspa(app, {
-  routes,
-  components: {
-    debug,
-    lazy,
-    rejected,
-    err,
-    ticker,
-    camelCase: (root) => {root.innerHTML = '<h1>camelCase</h1>'}
-  }
+  debug,
+  lazy,
+  rejected,
+  err,
+  ticker,
+  camelCase: (root) => {root.innerHTML = '<h1>camelCase</h1>'}
 })
 
 QUnit.module('params', () => {

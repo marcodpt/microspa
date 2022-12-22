@@ -18,27 +18,51 @@
     <div id="app" style="display:none">
       <h1>Home Page</h1>
     </div>
-    <template id="ms-simple">
+    <template data-path="#/:a">
+      <ms-debug route="#/:a"></ms-debug>
+    </template>
+    <template data-path="#/:a/:b">
+      <ms-debug route="#/:a/:b"></ms-debug>
+    </template>
+    <template data-path="#/home">
+      <ms-debug route="#/home"></ms-debug>
+    </template>
+    <template data-path="#/comp">
+      <ms-debug></ms-debug>
+    </template>
+    <template data-path="#/lazy">
+      <ms-lazy></ms-lazy>
+    </template>
+    <template data-path="#/rejected">
+      <ms-rejected></ms-rejected>
+    </template>
+    <template data-path="#/err">
+      <ms-err></ms-err>
+    </template>
+    <template data-path="#/ticker/:start">
+      <ms-ticker></ms-ticker>
+    </template>
+    <template data-path="#/simple">
       <h1>Simple</h1>
     </template>
-    <template id="ms-view">
+    <template data-path="#/view">
       <h1>View</h1>
       <ms-debug></ms-debug>
     </template>
-    <template id="ms-force">
+    <template data-path="#/force">
       <h1>Force</h1>
       <ms-debug x="4" y="3"></ms-debug>
     </template>
-    <template id="ms-transform">
+    <template data-path="#/transform">
       <h1>Transform</h1>
       <ms-debug data-x="i" data-y="j"></ms-debug>
     </template>
-    <template id="ms-deep">
+    <template data-path="#/deep">
       <h1>Deep</h1>
       <ms-simple>?</ms-simple>
       <ms-debug>!</ms-debug>
     </template>
-    <template id="ms-case">
+    <template data-path="#/case">
       <h1>Case</h1>
       <ms-camelCase></ms-camelCase>
       <ms-camel-case></ms-camel-case>
@@ -47,12 +71,12 @@
       <h1>Lazy</h1>
       <ms-lazy></ms-lazy>
     </template>
-    <template id="ms-many">
+    <template data-path="#/many">
       <h1>Many</h1>
       <ms-ticker></ms-ticker>
       <ms-ticker start="7"></ms-ticker>
     </template>
-    <template id="ms-too-many">
+    <template data-path="#/too/many">
       <h1>Too many</h1>
       <ms-ticker></ms-ticker>
       <ms-ticker start="5"></ms-ticker>
