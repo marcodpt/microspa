@@ -224,6 +224,28 @@ And it should also handle the case of the url:
 #/ticker?count=20&delay=3
 ```
 
+Another example:
+```html
+export default (node, {start}) => import("https://unpkg.com/superfine")
+  .then(({h, text, patch}) => {
+    const setState = state => patch(
+      node,
+      h(node.tagName.toLowerCase(), {}, [
+        h("h1", {}, text(state)),
+        h("button", { onclick: () => setState(state - 1) }, text("-")),
+        h("button", { onclick: () => setState(state + 1) }, text("+")),
+      ])
+    )
+
+    setState(isNaN(start) ? 0 : parseInt(start))
+  })
+```
+
+Here we use [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) to load the framework.
+Ideally, all dependencies can be loaded this way.
+For example, you can see some similarity in this paradigm in
+[qwik](https://github.com/BuilderIO/qwik)
+
 ## Contributing
 Everything within this documentation is tested 
 [here](https://marcodpt.github.io/microspa/tests/).
