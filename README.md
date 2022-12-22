@@ -5,7 +5,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
 [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) and/or
 [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import).
  - No building step, use `template` tag to define the routes.
- - Use [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) to access components inside routes.
+ - Use [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) to access components within routes.
  - `loading`, `error`, `default` (404 not found) templates are available.  
 
 ## Usage
@@ -20,7 +20,7 @@ A router for [micro-frontends](https://micro-frontends.org/)
 [hyperapp](https://github.com/jorgebucaran/hyperapp).
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/todo.js) 
  - `error`: a [component](#Component) made with vanilla js that
-throws an error or reject a promise after some delay.
+throws an error or rejects a promise after some delay.
 [Source](https://raw.githubusercontent.com/marcodpt/microspa/main/components/error.js) 
 
 ```html
@@ -34,12 +34,12 @@ throws an error or reject a promise after some delay.
       import error from './components/error.js'
 
       /*
-        Here we are defining the root of the router: <main id="app">
-        And we set 4 custom elements: 
+        Here we are setting the root of the router: <main id="app">
+        And we define 4 custom elements: 
         <ms-ticker>: vanilla JS,
         <ms-counter>: Superfine,
         <ms-todo>: Hyperapp,
-        <ms-error>: throw error or reject promise
+        <ms-error>: throws error or rejects promise
       */
       window.stop = microspa(document.getElementById('app'), {
         ticker,
@@ -51,33 +51,33 @@ throws an error or reject a promise after some delay.
   </head>
   <body>
     <nav>
-      <!--This navigate to <main id="app">-->
+      <!--This navigates to <main id="app">-->
       <a href="#/">Home</a>
 
-      <!-- This navigate to <template data-path="#/todo">. The value will be: plant a tree-->
+      <!-- This navigates to <template data-path="#/todo">. The value will be: plant a tree-->
       <a href="#/todo?value=plant%20a%20tree">Todo</a>
 
-      <!--This navigate to <template data-path="#/tickers"> -->
+      <!--This navigates to <template data-path="#/tickers"> -->
       <a href="#/tickers">2 tickers</a>
 
-      <!--This navigate to <template data-path="#/counter/:start"> -->
+      <!--This navigates to <template data-path="#/counter/:start"> -->
       <a href="#/counter/7?start=9&x=11">Counter params showcase</a>
 
-      <!--This navigate to <template data-path="#/error"> -->
+      <!--This navigates to <template data-path="#/error"> -->
       <a href="#/error">Error example</a>
 
-      <!--This navigate to <template data-default> -->
+      <!--This navigates to <template data-default> -->
       <a href="#/this/is/404">Not Founded</a>
 
       <!--This completely stops the router -->
       <a href="javascript:;" onclick="stop()">Stop Router</a>
 
-      <!--This goes to tests pages -->
+      <!--This goes to the test page -->
       <a href="tests">Test page</a>
     </nav>
 
     <!--
-      This is the root of the router, by default #/ but you can add a data-path attibute.
+      This is the root of the router by default #/ but you can add a data-path attibute.
       The `ms-todo` will start with: read a book
     -->
     <main id="app">
@@ -97,37 +97,37 @@ throws an error or reject a promise after some delay.
       <!--This ticker will start with query param `start` or default 0-->
       <ms-ticker></ms-ticker>
 
-      <!--This ticker will start always with 10-->
+      <!--This ticker will always start with 10-->
       <ms-ticker start="10"></ms-ticker>
     </template>
 
 
     <!-- The nav link will set the hash to: #/counter/7?start=9&x=11-->
     <template data-path="#/counter/:start">
-      <!-- starts with 7, path has higher priority than query.-->
+      <!-- starts with 7, the path has higher priority than the query.-->
       <ms-counter></ms-counter>
 
-      <!-- starts with 1, attributes has the highest priority.-->
+      <!-- starts with 1, attributes have the highest priority.-->
       <ms-counter start="1"></ms-counter>
 
-      <!-- start with 11, data-start="x" sets the `start` to `x`.-->
+      <!-- starts with 11, data-start="x" sets `start` to `x`.-->
       <ms-counter data-start="x"></ms-counter>
     </template>
 
 
     <template data-path="#/error">
-      <!-- Display <h1>Custom loading...</h1> for 2s, then reject with <template data-error>-->
+      <!-- Displays <h1>Custom loading...</h1> for 2s, then rejects with <template data-error>-->
       <ms-error message="first error" delay="2">
         <h1>Custom loading...</h1>
       </ms-error>
 
-      <!-- Display <template data-loading> for 1s, then reject with <template data-error>-->
+      <!-- Displays <template data-loading> for 1s, then rejects with <template data-error>-->
       <ms-error message="second error" delay="1"></ms-error>
 
-      <!-- Throws an error and display <template data-error> -->
+      <!-- Throws an error and displays <template data-error> -->
       <ms-error message="third error"></ms-error>
 
-      <!-- Throws an error and display <h1>Custom error</h1> -->
+      <!-- Throws an error and displays <h1>Custom error</h1> -->
       <ms-error
         message="fourth error"
         error="<h1>Custom error</h1>"
@@ -142,7 +142,7 @@ throws an error or reject a promise after some delay.
 
     <!--
       This template will be displayed inside a component every time it
-      rejects the promise or throws an error and has no `error` attribute.
+      rejects the promise or throws an error and does not have the `error` attribute.
     -->
     <template data-error>
       <h1>Error!</h1>
@@ -152,7 +152,7 @@ throws an error or reject a promise after some delay.
 
     <!--
       This template will be displayed inside a component every time
-      it is loading and has no innerHTML.
+      this is loading and has no innerHTML.
     -->
     <template data-loading>
       <h1>Loading...</h1>
