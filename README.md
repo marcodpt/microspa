@@ -54,7 +54,10 @@ throws an error or rejects a promise after some delay.
       <!--This navigates to <main id="app">-->
       <a href="#/">Home</a>
 
-      <!-- This navigates to <template data-path="#/todo">. The value will be: plant a tree-->
+      <!--
+        This navigates to <template data-path="#/todo">.
+        The value will be: plant a tree
+      -->
       <a href="#/todo?value=plant%20a%20tree">Todo</a>
 
       <!--This navigates to <template data-path="#/tickers"> -->
@@ -74,7 +77,8 @@ throws an error or rejects a promise after some delay.
     </nav>
 
     <!--
-      This is the root of the router by default #/ but you can add a data-path attibute.
+      This is the root of the router by default #/,
+      but you can add a data-path attibute.
       The `ms-todo` will start with: read a book
     -->
     <main id="app">
@@ -99,26 +103,44 @@ throws an error or rejects a promise after some delay.
     </template>
 
 
-    <!-- The nav link will set the hash to: #/counter/7?start=9&x=11-->
+    <!--
+      The nav link will set the hash to:
+      #/counter/7?start=9&x=11
+    -->
     <template data-path="#/counter/:start">
-      <!-- starts with 7, the path has higher priority than the query.-->
+      <!-- 
+        starts with 7,
+        the path has higher priority than the query.
+      -->
       <ms-counter></ms-counter>
 
-      <!-- starts with 1, attributes have the highest priority.-->
+      <!--
+        starts with 1,
+        attributes have the highest priority.
+      -->
       <ms-counter start="1"></ms-counter>
 
-      <!-- starts with 11, data-start="x" sets `start` to `x`.-->
+      <!--
+        starts with 11,
+        data-start="x" sets `start` to `x`.
+      -->
       <ms-counter data-start="x"></ms-counter>
     </template>
 
 
     <template data-path="#/error">
-      <!-- Displays <h1>Custom loading...</h1> for 2s, then rejects with <template data-error>-->
+      <!--
+        Displays <h1>Custom loading...</h1> for 2s,
+        then rejects with <template data-error>
+      -->
       <ms-error message="first error" delay="2">
         <h1>Custom loading...</h1>
       </ms-error>
 
-      <!-- Displays <template data-loading> for 1s, then rejects with <template data-error>-->
+      <!--
+        Displays <template data-loading> for 1s,
+        then rejects with <template data-error>
+      -->
       <ms-error message="second error" delay="1"></ms-error>
 
       <!-- Throws an error and displays <template data-error> -->
@@ -131,15 +153,19 @@ throws an error or rejects a promise after some delay.
       ></ms-error>
     </template>
 
-    <!-- This route will be displayed every time the router does not match any route -->
+    <!--
+      This route will be displayed every time
+      the router does not match any route
+    -->
     <template data-default>
       <h1>Not Found!</h1>
       <p>Sorry, page not found. <a href="#/">Go home</a></p>
     </template>
 
     <!--
-      This template will be displayed inside a component every time it
-      rejects the promise or throws an error and does not have the `error` attribute.
+      This template will be displayed inside a component
+      every time it rejects the promise or throws an error and
+      does not have the `error` attribute.
     -->
     <template data-error>
       <h1>Error!</h1>
@@ -148,8 +174,8 @@ throws an error or rejects a promise after some delay.
     </template>
 
     <!--
-      This template will be displayed inside a component every time
-      this is loading and has no innerHTML.
+      This template will be displayed inside a component
+      every time this is loading and has no innerHTML.
     -->
     <template data-loading>
       <h1>Loading...</h1>
