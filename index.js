@@ -28,9 +28,9 @@ const setView = (node, selector) => {
         node.appendChild(child.cloneNode(true))
       })
     })
-    return true
+  } else if (selector.indexOf('=') >= 0 || selector == 'data-default') {
+    setView(node, 'data-home')
   }
-  return false
 }
 
 const resolveComp = (comp, node, params) => Promise.resolve()
@@ -50,30 +50,29 @@ const resolveComp = (comp, node, params) => Promise.resolve()
   })
 
 const resolveView = (node, selector, components, params) => {
-  if (setView(node, selector)) {
-    const Comp = []
+  setView(node, selector)
+  const Comp = []
 
-    Object.keys(components).forEach(name => {
-      const kebab = 'ms-'+name
-        .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-        .toLowerCase()
+  Object.keys(components).forEach(name => {
+    const kebab = 'ms-'+name
+      .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+      .toLowerCase()
 
-      node.querySelectorAll(kebab).forEach(e => {
-        Comp.push({
-          node: e,
-          comp: components[name]
-        })
+    node.querySelectorAll(kebab).forEach(e => {
+      Comp.push({
+        node: e,
+        comp: components[name]
       })
     })
+  })
 
-    return Promise.allSettled(
-      Comp.map(({node, comp}) => resolveComp(comp, node, params))
-    ).then(Stop => () => Stop
-      .map(({value}) => value)
-      .filter(stop => typeof stop == 'function')
-      .forEach(stop => stop())
-    )
-  }
+  return Promise.allSettled(
+    Comp.map(({node, comp}) => resolveComp(comp, node, params))
+  ).then(Stop => () => Stop
+    .map(({value}) => value)
+    .filter(stop => typeof stop == 'function')
+    .forEach(stop => stop())
+  )
 }
 
 export default (root, components) => {
@@ -88,9 +87,11 @@ export default (root, components) => {
       return template
     }, document.createElement('template'))
     tpl.setAttribute('data-path', home)
+    tpl.setAttribute('data-home', true)
     document.body.appendChild(tpl)
   } else {
     root.setAttribute('data-path', home)
+    root.setAttribute('data-home', true)
   }
 
   const state = {

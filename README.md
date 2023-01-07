@@ -244,5 +244,10 @@ For example, you can see some similarity in this paradigm in
 [qwik](https://github.com/BuilderIO/qwik)
 
 ## Contributing
+Everything within this documentation is tested 
+[here](https://marcodpt.github.io/microspa/tests/).
+And it will always like this. Any changes to the documentation,
+any contributions MUST be present in the tests.
+
 It's a very simple project.
 Any contribution, any feedback is greatly appreciated.

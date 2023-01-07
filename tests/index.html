@@ -19,13 +19,13 @@
       <h1>Home Page</h1>
     </div>
     <template data-path="#/:a">
-      <ms-debug route="#/:a"></ms-debug>
+      <ms-debug route="/:a"></ms-debug>
     </template>
     <template data-path="#/:a/:b">
-      <ms-debug route="#/:a/:b"></ms-debug>
+      <ms-debug route="/:a/:b"></ms-debug>
     </template>
     <template data-path="#/home">
-      <ms-debug route="#/home"></ms-debug>
+      <ms-debug route="/home"></ms-debug>
     </template>
     <template data-path="#/comp">
       <ms-debug></ms-debug>
@@ -43,7 +43,7 @@
       <ms-ticker></ms-ticker>
     </template>
     <template data-path="#/simple">
-      <h1>Simple</h1>
+      <ms-simple></ms-simple>
     </template>
     <template data-path="#/view">
       <h1>View</h1>
@@ -67,10 +67,6 @@
       <ms-camelCase></ms-camelCase>
       <ms-camel-case></ms-camel-case>
     </template>
-    <template id="ms-pending">
-      <h1>Lazy</h1>
-      <ms-lazy></ms-lazy>
-    </template>
     <template data-path="#/many">
       <h1>Many</h1>
       <ms-ticker></ms-ticker>
@@ -80,7 +76,11 @@
       <h1>Too many</h1>
       <ms-ticker></ms-ticker>
       <ms-ticker start="5"></ms-ticker>
-      <ms-many></ms-many>
+      <ms-many>
+        <h1>Many</h1>
+        <ms-ticker></ms-ticker>
+        <ms-ticker start="7"></ms-ticker>
+      </ms-many>
     </template>
   </body>
 </html>
