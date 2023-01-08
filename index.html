@@ -16,7 +16,9 @@
       import error from './components/error.js'
 
       /*
-        Here we are defining the root of the router: <main id="app">
+        Here we are defining the root of the router:
+        <main id="app">
+
         And we set 4 custom elements: 
         <ms-ticker>: vanilla JS,
         <ms-counter>: Superfine,
@@ -33,31 +35,57 @@
   </head>
   <body>
     <nav>
-      <!--This navigate to <main id="app">-->
-      <a href="#/">Home</a>
+      <!--
+        This navigate to:
+        <main id="app">
+      -->
+      <a href="#/">Home</a> |
 
-      <!-- This navigate to <template data-path="#/todo">. The value will be: plant a tree-->
-      <a href="#/todo?value=plant%20a%20tree">Todo</a>
+      <!--
+        This navigate to:
+          <template data-path="#/todo">
+        The value will be:
+          plant a tree
+      -->
+      <a href="#/todo?value=plant%20a%20tree">Todo</a> |
 
-      <!--This navigate to <template data-path="#/tickers"> -->
-      <a href="#/tickers">2 tickers</a>
+      <!--
+        This navigate to:
+        <template data-path="#/tickers">
+      -->
+      <a href="#/tickers">2 tickers</a> |
 
-      <!--This navigate to <template data-path="#/counter/:start"> -->
-      <a href="#/counter/7?start=9&x=11">Counter params showcase</a>
+      <!--
+        This navigate to:
+        <template data-path="#/counter/:start">
+      -->
+      <a href="#/counter/7?start=9&x=11">3 Counters</a> |
 
-      <!--This navigate to <template data-path="#/error"> -->
-      <a href="#/error">Error example</a>
+      <!--
+        This navigate to:
+        <template data-path="#/error">
+      -->
+      <a href="#/error">Error example</a> |
 
-      <!--This navigate to <template data-default> -->
-      <a href="#/this/is/404">Not Founded</a>
+      <!--
+        This navigate to:
+        <template data-default>
+      -->
+      <a href="#/this/is/404">Not Founded</a> |
 
       <!--This completely stops the router -->
-      <a href="javascript:;" onclick="stop()">Stop Router</a>
+      <a href="javascript:;" onclick="stop()">Stop Router</a> |
+
+      <!--This goes to test page -->
+      <a href="tests">Tests</a>
     </nav>
 
     <!--
-      This is the root of the router, by default #/ but you can add a data-path attibute.
-      The `ms-todo` will start with: read a book
+      This is the root of the router,
+      by default #/ but you can add a
+      data-path attibute.
+      The `ms-todo` will start with:
+        read a book
     -->
     <main id="app">
       <h1>MicroSPA</h1>
@@ -73,7 +101,10 @@
     <template data-path="#/tickers">
       <h1> 2 tickers</h1>
 
-      <!--This ticker will start with query param `start` or default 0-->
+      <!--
+        This ticker will start with
+        query param `start` or default 0
+      -->
       <ms-ticker></ms-ticker>
 
       <!--This ticker will start always with 10-->
@@ -81,39 +112,66 @@
     </template>
 
 
-    <!-- The nav link will set the hash to: #/counter/7?start=9&x=11-->
+    <!--
+      The nav link will set the hash to:
+      #/counter/7?start=9&x=11
+    -->
     <template data-path="#/counter/:start">
-      <!-- starts with 7, path has higher priority than query.-->
+      <!--
+        starts with 7,
+        path has higher priority than query.
+      -->
       <ms-counter></ms-counter>
 
-      <!-- starts with 1, attributes has the highest priority.-->
+      <!--
+        starts with 1,
+        attributes has the highest priority.
+      -->
       <ms-counter start="1"></ms-counter>
 
-      <!-- start with 11, data-start="x" sets the `start` to `x`.-->
+      <!--
+        start with 11,
+        data-start="x" sets the `start` to `x`.
+      -->
       <ms-counter data-start="x"></ms-counter>
     </template>
 
 
     <template data-path="#/error">
-      <!-- Display <h1>Custom loading...</h1> for 2s, then reject with <template data-error>-->
+      <!--
+        Display <h1>Custom loading...</h1> for 2s,
+        then reject with <template data-error>
+      -->
       <ms-error message="first error" delay="2">
         <h1>Custom loading...</h1>
       </ms-error>
 
-      <!-- Display <template data-loading> for 1s, then reject with <template data-error>-->
+      <!--
+        Display <template data-loading> for 1s,
+        then reject with <template data-error>
+      -->
       <ms-error message="second error" delay="1"></ms-error>
 
-      <!-- Throws an error and display <template data-error> -->
+      <!--
+        Throws an error and
+        display <template data-error>
+      -->
       <ms-error message="third error"></ms-error>
 
-      <!-- Throws an error and display <h1>Custom error</h1> -->
+      <!--
+        Throws an error and
+        display <h1>Custom error</h1>
+      -->
       <ms-error
         message="fourth error"
         error="<h1>Custom error</h1>"
       ></ms-error>
     </template>
 
-    <!-- This route will be displayed every time the router does not match any route -->
+    <!--
+      This route will be displayed every time
+      the router does not match any route
+    -->
     <template data-default>
       <h1>Not Found!</h1>
       <p>Sorry, page not found. <a href="#/">Go home</a></p>
@@ -122,7 +180,7 @@
     <!--
       This template will be displayed inside a custom element,
       if it reject the promise or throw an error
-      and has no data-error attribute
+      and has no error attribute
     -->
     <template data-error>
       <h1>Error!</h1>

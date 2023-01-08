@@ -224,11 +224,35 @@ QUnit.module('params', () => {
 QUnit.module('promises', () => {
   QUnit.test('loading', test([
     {url: '#', res: '<h1>Home Page</h1>'},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {time: long, res: '<ms-lazy><h1>Loaded</h1></ms-lazy>'},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      time: long,
+      res: `
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+      `
+    },
     {url: '#', res: '<h1>Home Page</h1>'},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {url: '#', res: '<ms-lazy></ms-lazy>'},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      url: '#',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>'},
     {url: '#/loading', res: {a: 'loading', route: '/:a'}},
     {
@@ -248,26 +272,41 @@ QUnit.module('promises', () => {
     },
     {
       url: '#/lazy',
-      res: `<ms-lazy>
-        <h1>Loading...</h1>
-        <ms-simple></ms-simple>
-      </ms-lazy>`
+      res: `
+        <ms-lazy>
+          <h1>Loading...</h1>
+          <ms-simple></ms-simple>
+        </ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
     },
-    {time: long, res: '<ms-lazy><h1>Loaded</h1></ms-lazy>'},
+    {
+      time: long,
+      res: `
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+      `
+    },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
     {
       url: '#/lazy',
-      res: `<ms-lazy>
-        <h1>Loading...</h1>
-        <ms-simple></ms-simple>
-      </ms-lazy>`
+      res: `
+        <ms-lazy>
+          <h1>Loading...</h1>
+          <ms-simple></ms-simple>
+        </ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
     },
     {
       url: '#',
-      res: `<ms-lazy>
-        <h1>Loading...</h1>
-        <ms-simple></ms-simple>
-      </ms-lazy>`
+      res: `
+        <ms-lazy>
+          <h1>Loading...</h1>
+          <ms-simple></ms-simple>
+        </ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
     },
     {time: long, res: '<h1>Home Page</h1>'},
     {
@@ -289,23 +328,81 @@ QUnit.module('promises', () => {
       time: long
     },
     {url: '#', res: '<h1>Home Page</h1>'},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {time: long, res: '<ms-lazy><h1>Loaded</h1></ms-lazy>'},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      time: long,
+      res: `
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+        <ms-lazy><h1>Loaded</h1></ms-lazy>
+      `
+    },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {url: '#', res: '<ms-lazy></ms-lazy>'},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      url: '#',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>'},
     {url: '#/loading', res: {a: 'loading', route: '/:a'}},
     {url: '#', res: '<h1>Home Page</h1>'}
   ]))
   QUnit.test('error', test([
     {url: '#', res: '<h1>Home Page</h1>'},
-    {url: '#/err', res: '<ms-err><h1>Error</h1></ms-err>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
-    {time: long, res: '<ms-rejected><h1>Rejected</h1></ms-rejected>'},
+    {
+      url: '#/err',
+      res: `
+        <ms-err>
+          <h1>Error</h1>
+        </ms-err>
+        <ms-err error="<h2>Custom Error</h2>">
+          <h2>Custom Error</h2>
+        </ms-err>
+      `
+    },
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
+    {
+      time: long,
+      res: `
+        <ms-rejected><h1>Rejected</h1></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"><h3>Fail!</h3></ms-rejected>
+      `
+    },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
-    {url: '#', res: '<ms-rejected></ms-rejected>'},
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
+    {
+      url: '#',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>'},
     {url: '#/error', res: {a: 'error', route: '/:a'}},
     {
@@ -325,23 +422,51 @@ QUnit.module('promises', () => {
     },
     {
       url: '#/err',
-      res: `<ms-err>
-        <h1>Route Fail!</h1>
-        <ms-simple></ms-simple>
-      </ms-err>`
+      res: `
+        <ms-err>
+          <h1>Route Fail!</h1>
+          <ms-simple></ms-simple>
+        </ms-err>
+        <ms-err error="<h2>Custom Error</h2>">
+          <h2>Custom Error</h2>
+        </ms-err>
+      `
     },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
     {
       time: long,
-      res: `<ms-rejected>
-        <h1>Route Fail!</h1>
-        <ms-simple></ms-simple>
-      </ms-rejected>`
+      res: `
+        <ms-rejected>
+          <h1>Route Fail!</h1>
+          <ms-simple></ms-simple>
+        </ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>">
+          <h3>Fail!</h3>
+        </ms-rejected>
+      `
     },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
-    {url: '#', res: '<ms-rejected></ms-rejected>'},
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
+    {
+      url: '#',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>'},
     {
       url: '#/error',
@@ -362,12 +487,46 @@ QUnit.module('promises', () => {
       time: long
     },
     {url: '#', res: '<h1>Home Page</h1>'},
-    {url: '#/err', res: '<ms-err><h1>Error</h1></ms-err>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
-    {time: long, res: '<ms-rejected><h1>Rejected</h1></ms-rejected>'},
+    {
+      url: '#/err',
+      res: `
+        <ms-err>
+          <h1>Error</h1>
+        </ms-err>
+        <ms-err error="<h2>Custom Error</h2>">
+          <h2>Custom Error</h2>
+        </ms-err>
+      `
+    },
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
+    {
+      time: long,
+      res: `
+        <ms-rejected><h1>Rejected</h1></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"><h3>Fail!</h3></ms-rejected>
+      `
+    },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/rejected', res: '<ms-rejected></ms-rejected>'},
-    {url: '#', res: '<ms-rejected></ms-rejected>'},
+    {
+      url: '#/rejected',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
+    {
+      url: '#',
+      res: `
+        <ms-rejected></ms-rejected>
+        <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>'},
     {url: '#/error', res: {a: 'error', route: '/:a'}},
     {url: '#', res: '<h1>Home Page</h1>'}
@@ -458,12 +617,44 @@ QUnit.module('stop', () => {
       tick: [7]
     },
     {url: '#/simple', res: '<ms-simple><h1>Simple</h1></ms-simple>'},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {url: '#/ticker/2', res: `<ms-lazy></ms-lazy>`, tick: [7]},
-    {url: '#', res: '<ms-lazy></ms-lazy>'},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      url: '#/ticker/2',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `,
+      tick: [7]
+    },
+    {
+      url: '#',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
     {time: long, res: '<h1>Home Page</h1>', tick: [7]},
-    {url: '#/lazy', res: '<ms-lazy></ms-lazy>'},
-    {url: '#/ticker/11', res: `<ms-lazy></ms-lazy>`, tick: [7]},
+    {
+      url: '#/lazy',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `
+    },
+    {
+      url: '#/ticker/11',
+      res: `
+        <ms-lazy></ms-lazy>
+        <ms-lazy>tic-tac</ms-lazy>
+      `,
+      tick: [7]
+    },
     {
       time: long - step,
       res: `<ms-ticker><h1>Tick: 11</h1></ms-ticker>`,

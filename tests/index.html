@@ -32,12 +32,15 @@
     </template>
     <template data-path="#/lazy">
       <ms-lazy></ms-lazy>
+      <ms-lazy>tic-tac</ms-lazy>
     </template>
     <template data-path="#/rejected">
       <ms-rejected></ms-rejected>
+      <ms-rejected error="<h3>Fail!</h3>"></ms-rejected>
     </template>
     <template data-path="#/err">
       <ms-err></ms-err>
+      <ms-err error="<h2>Custom Error</h2>"></ms-err>
     </template>
     <template data-path="#/ticker/:start">
       <ms-ticker></ms-ticker>
