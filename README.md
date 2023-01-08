@@ -1,11 +1,11 @@
 # ![](favicon.ico) MicroSPA
 A router for [micro-frontends](https://micro-frontends.org/)
  - A hash router for server-side rendered views.
- - All components are lazy-loaded, with
+ - All [components](#Component) are lazy-loaded, with
 [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) and/or
 [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import).
  - No building step, use `template` tag to define the routes.
- - Use [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) to access components within routes.
+ - Use [custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) to access [components](#Component) within routes.
  - `loading`, `error`, `default` (404 not found) templates are available.  
 
 ## Usage
