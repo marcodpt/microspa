@@ -124,7 +124,7 @@ QUnit.module('params', () => {
     {url: '#/home?x=unchanged', res: {'x.y': '8', route: '/home'}},
     {url: '#/xxx?k=1&k=2', res: {k: '2', a: 'xxx', route: '/:a'}},
     {url: '#/xxx?k=unchanged', res: {k: '2', a: 'xxx', route: '/:a'}},
-    {url: '#/home?k[]=1&k[]=2', res: {'k[]': '2', route: '/home'}},
+    {url: '#/home?k[]=1&k[]=2', res: {'k': ['1', '2'], route: '/home'}},
     {url: '#', res: '<h1>Home Page</h1>'}
   ]))
   QUnit.test('component', test([
