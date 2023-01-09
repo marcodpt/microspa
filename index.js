@@ -178,16 +178,15 @@ export default (root, components) => {
       state.signature = signature
       state.stop = () => {}
       state.pending = true
-      const rerun = stop => {
-        state.pending = false
-        state.stop = typeof stop == 'function' ? stop : () => {}
-        router()
-      }
 
       resolveView(root, selector, components, {
         ...query,
         ...params
-      }).then(rerun)
+      }).then(stop => {
+        state.pending = false
+        state.stop = typeof stop == 'function' ? stop : () => {}
+        router()
+      })
     }
   }
   router()
