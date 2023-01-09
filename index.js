@@ -41,6 +41,7 @@ const resolveComp = (comp, node, params) => Promise.resolve()
     return comp(node, getParams(node, params))
   })
   .catch(err => {
+    console.warn(err)
     const html = node.getAttribute('error')
     if (!html) {
       setView(node, 'data-error')
@@ -186,10 +187,7 @@ export default (root, components) => {
       resolveView(root, selector, components, {
         ...query,
         ...params
-      }).then(rerun).catch(err => {
-        rerun()
-        console.warn(err)
-      })
+      }).then(rerun)
     }
   }
   router()
