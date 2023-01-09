@@ -28,10 +28,6 @@ throws an error or rejects a promise after some delay.
   <head>
     <script type="module">
       import microspa from "https://cdn.jsdelivr.net/gh/marcodpt/microspa/index.js"
-      import ticker from './components/ticker.js'
-      import counter from './components/counter.js'
-      import todo from './components/todo.js'
-      import error from './components/error.js'
 
       /*
         Here we are defining the root of the router:
@@ -44,10 +40,10 @@ throws an error or rejects a promise after some delay.
         <ms-error>: throw error or reject promise
       */
       window.stop = microspa(document.getElementById('app'), {
-        ticker,
-        counter,
-        todo,
-        error 
+        ticker: './components/ticker.js',
+        counter: './components/counter.js',
+        todo: './components/todo.js',
+        error: './components/error.js' 
       })
     </script>
   </head>
@@ -222,7 +218,7 @@ The DOM element where the router should be mounted.
 
 ### Object `components`
 An object where the keys are the [component](#Component) names and the 
-values are [component](#Component) functions.
+values are [component](#Component) functions or strings with a URL to an import.
 
 The name of the [components](#Component) must be written in
 [camel case](https://en.wikipedia.org/wiki/Camel_case),

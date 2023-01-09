@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
       import microspa from './index.js'
-      import ticker from './components/ticker.js'
-      import counter from './components/counter.js'
-      import todo from './components/todo.js'
-      import error from './components/error.js'
 
       /*
         Here we are defining the root of the router:
@@ -25,10 +21,10 @@
         <ms-error>: throw error or reject promise
       */
       window.stop = microspa(document.getElementById('app'), {
-        ticker,
-        counter,
-        todo,
-        error 
+        ticker: './components/ticker.js',
+        counter: './components/counter.js',
+        todo: './components/todo.js',
+        error: './components/error.js' 
       })
     </script>
   </head>

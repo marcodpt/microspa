@@ -34,11 +34,12 @@ const setView = (node, selector) => {
 }
 
 const resolveComp = (comp, node, params) => Promise.resolve()
-  .then(() => {
+  .then(() => typeof comp == 'string' ? import(comp) : {default: comp})
+  .then(comp => {
     if (!node.innerHTML.trim()) {
       setView(node, 'data-loading')
     }
-    return comp(node, getParams(node, params))
+    return comp.default(node, getParams(node, params))
   })
   .catch(err => {
     console.warn(err)
