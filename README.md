@@ -223,7 +223,7 @@ values are [component](#Component) functions or strings with a URL to an import.
 The name of the [components](#Component) must be written in
 [camel case](https://en.wikipedia.org/wiki/Camel_case),
 and you can use the name of the routes object that way.
-But if you use it in an `html` view, it will convert tox
+But if you use it in an `html` view, it will convert to
 [kebab case](https://en.wikipedia.org/wiki/Letter_case#Kebab_case)
 starting with `ms-`.
 
