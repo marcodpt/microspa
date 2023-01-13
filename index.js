@@ -96,22 +96,17 @@ export default (root, components) => {
     root.setAttribute('data-home', true)
   }
 
-  const state = {
-    path: null,
-    signature: null,
-    stop: () => {},
-    pending: false
-  }
+  var stop = () => {}
   const router = () => {
-    if (state.path === false || state.pending) {
+    if (!stop) {
       return
     }
-    var url = getPath(window.location.hash)
+    stop()
+    stop = null
+
+    var url = getPath(location.hash)
     const Url = url.split('?')
     const path = Url.shift()
-    if (path === state.path) {
-      return
-    }
     const query = Url.join('?').split('&')
       .map(pair => pair.split('='))
       .map(pair => ({
@@ -171,30 +166,24 @@ export default (root, components) => {
       params: {},
       weight: 0
     })
-    const signature = `${selector}\n${JSON.stringify(params)}`
 
-    if (state.signature !== signature) {
-      state.stop()
-      state.path = path 
-      state.signature = signature
-      state.stop = () => {}
-      state.pending = true
-
-      resolveView(root, selector, components, {
-        ...query,
-        ...params
-      }).then(stop => {
-        state.pending = false
-        state.stop = typeof stop == 'function' ? stop : () => {}
+    resolveView(root, selector, components, {
+      ...query,
+      ...params
+    }).then(s => {
+      stop = typeof s == 'function' ? s : () => {}
+      if (getPath(location.hash) != url) {
         router()
-      })
-    }
+      }
+    })
   }
   router()
   window.addEventListener('hashchange', router)
 
   return () => {
-    state.stop()
-    state.path = false
+    if (typeof s == 'function') {
+      stop()
+    }
+    stop = null
   } 
 }

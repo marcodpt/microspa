@@ -234,13 +234,6 @@ someComp -> ms-some-comp
 A function that stops the router. It will call the `stop` function of all
 [components](#Component) on the screen, and then the router will stop. 
 
-### Remarks:
- - only path changes will trigger [components](#Component) rerender.
- - query params changes will be ignored, you must use then to store the current
-state in url for link sharing eg. 
- - this is a hash router designed to use `html` files as single page apps
-without ANY building steps.
-
 # Component
 Definition:
 
